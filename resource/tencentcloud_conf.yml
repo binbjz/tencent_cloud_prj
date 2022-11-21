@@ -1,0 +1,12 @@
+tc_res:
+  tc_secret_id: cn18eI19ppN0qJZ5o3qXfYWbi3eJloqHh5WbnpyUo6qbmqt5 
+  tc_secret_key: lGiWq3yNlpiKqXiChql_ZKaafKN6jop6Y6Cahnh9moo=
+  tc_region: ap-beijing
+  tc_dts_endpoint: dts.tencentcloudapi.com
+  tc_cvm_endpoint: cvm.tencentcloudapi.com
+  tc_tke_endpoint: tke.tencentcloudapi.com
+  tc_cdb_endpoint: cdb.tencentcloudapi.com
+  tc_tdsql_c_endpoint: cynosdb.tencentcloudapi.com
+  tc_pg_endpoint: postgres.tencentcloudapi.com
+  tc_vpc_endpoint: vpc.tencentcloudapi.com
+  tc_billing_endpoint: billing.tencentcloudapi.com
