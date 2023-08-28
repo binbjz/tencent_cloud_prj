@@ -1,6 +1,9 @@
 import time
 from queue import Queue
-from typing import Any, Optional
+from typing import Optional, Callable, ParamSpec, TypeVar
+
+P = ParamSpec("P")
+T = TypeVar("T")
 
 
 class PollingException(Exception):
@@ -19,7 +22,7 @@ class MaxCallException(PollingException):
     """Exception raised if maximum number of iterations is exceeded"""
 
 
-def step_constant(step: int):
+def step_constant(step: int) -> int:
     """
     Use this function when you want the step to remain fixed in every iteration (typically
     good for instances when you know approximately how long the function should poll for)
@@ -27,7 +30,7 @@ def step_constant(step: int):
     return step
 
 
-def step_linear_double(step: int):
+def step_linear_double(step: int) -> int:
     """
     Use this function when you want the step to double each iteration (e.g. like the way ArrayList
     works in Java). Note that this can result in very long poll times after a few iterations
@@ -35,16 +38,17 @@ def step_linear_double(step: int):
     return step * 2
 
 
-def is_truthy(val: Any):
+def is_truthy(val: T) -> bool:
     """Use this function to test if a return value is truthy"""
     return bool(val)
 
 
-def poll(target: Any, step: int, args: tuple = (), kwargs: Optional[dict] = None,
+def poll(target: Callable[P, T], step: int, args: tuple = (), kwargs: Optional[dict] = None,
          timeout: Optional[int] = None, max_tries: Optional[int] = None,
-         check_success: Any = is_truthy, step_function: Any = step_constant,
+         check_success: Callable[[T], bool] = is_truthy,
+         step_function: Callable[[int], int] = step_constant,
          ignore_exceptions: tuple = (), poll_forever: bool = False,
-         collect_values: Optional[Queue] = None):
+         collect_values: Optional[Queue] = None) -> T:
     """
     Poll by calling a target function until a certain condition is met.
     You must specify at least a target function to be called and the step.
@@ -68,7 +72,7 @@ def poll(target: Any, step: int, args: tuple = (), kwargs: Optional[dict] = None
     constant, but you can also pass a function that will increase or decrease the step. As an example,
     you can increase the wait time between calling the target function by 10 seconds every iteration
     until the step is 120 seconds--at which point it should remain constant at 120 seconds
-    >>> def custom_step_function(_step: int):
+    >>> def custom_step_function(_step: int) -> int:
     >>>     _step += 10
     >>>     return max(_step, 120)
     :type ignore_exceptions: tuple
